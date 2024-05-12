@@ -5,6 +5,7 @@ const prisma 			= new PrismaClient();
 const Joi 				= require("joi");
 const requestIp			= require('request-ip')
 
+// 사용자가 익명의 방명록을 남기도록 합니다.
 const schema = Joi.object({
 	title: Joi.string().min(1).max(20).required(),
 	description: Joi.string().min(1).max(300).required()

@@ -4,11 +4,25 @@ const cors	  		= require('cors')
 const cookieParser  = require('cookie-parser')
 const morgan        = require('morgan')
 const helmet		= require('helmet')
+const multer        = require('multer')
+
+const path          = require('path')
+const fs            = require('fs')
 const dotenv  		= require('dotenv')
 
 dotenv.config()
 
+/* 이미지 파일을 저장할 디렉토리 설정 */
+const ImageDir = './public/images'
+
+if (!fs.existsSync(ImageDir)) {
+    fs.mkdirSync(ImageDir)
+} 
+/* 이미지 파일을 저장할 디렉토리 설정 */
+
 const app = express()
+
+const upload = multer({ dest: 'public/images/' });
 
 if(process.env.NODE_ENV === 'production') {
     app.use(morgan('combined')) // 배포 환경 : log에 IP를 남김
@@ -32,9 +46,10 @@ app.use(helmet.hsts({
 }));
 /* Helmet 미들웨어 반영 부분 */
 
+app.use(express.json({ limit : '500mb' }));
+app.use(express.urlencoded({limit:'500mb',extended:false}));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.json())
-app.use(express.urlencoded({extended:false}))
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(session({
     resave: false,

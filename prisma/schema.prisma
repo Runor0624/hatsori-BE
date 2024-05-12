@@ -13,17 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Test {
-  id         Int      @id @default(autoincrement())
-  userId     String
-  createDate DateTime @default(now())
-}
-
 model Visit {
   id         Int      @id @default(autoincrement())
   title     String   @db.VarChar(20)
   description String @db.VarChar(300)
   userIp     String   @db.VarChar(50)
   createDate DateTime @default(now())
-} // 방명록
+} // 방명록 - 익명
 

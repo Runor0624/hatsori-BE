@@ -12,14 +12,6 @@ const dotenv  		= require('dotenv')
 
 dotenv.config()
 
-/* 이미지 파일을 저장할 디렉토리 설정 */
-const ImageDir = './public/images'
-
-if (!fs.existsSync(ImageDir)) {
-    fs.mkdirSync(ImageDir)
-} 
-/* 이미지 파일을 저장할 디렉토리 설정 */
-
 const app = express()
 
 const upload = multer({ dest: 'public/images/' });

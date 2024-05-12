@@ -3,6 +3,7 @@ const session 		= require('express-session')
 const cors	  		= require('cors')
 const cookieParser  = require('cookie-parser')
 const morgan        = require('morgan')
+const helmet		= require('helmet')
 const dotenv  		= require('dotenv')
 
 dotenv.config()
@@ -19,6 +20,19 @@ app.set('PORT', process.env.PORT || 3000)
 
 app.use(cors({origin: '*'}))
 
+/* Helmet 미들웨어 반영 부분 */
+app.use(helmet.hidePoweredBy())
+app.use(helmet.xssFilter());
+app.use(helmet.referrerPolicy());
+app.use(helmet.ieNoOpen());
+app.use(helmet.hsts({
+    maxAge: 60 * 60 * 24 * 365, 
+    includeSubDomains: true, 
+    preload: true 
+}));
+/* Helmet 미들웨어 반영 부분 */
+
+
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 app.use(cookieParser(process.env.COOKIE_SECRET))
@@ -31,6 +45,14 @@ app.use(session({
         secure: false
     }
 }))
+
+/* Router */
+const VisitRouter  = require('./Router/Visit')
+
+
+app.use('/visit', VisitRouter)
+
+/* Router */
 
 app.listen(app.get('PORT'), () => {
     console.log(app.get("PORT"), "OPEN")

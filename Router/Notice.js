@@ -12,14 +12,26 @@ const schema = Joi.object({
 });
 
 router.get('/', async (req, res) => {
-	const Notice = await prisma.notices.findMany({
+	const notices = await prisma.notices.findMany({
 		orderBy: {
 		  createDate: 'desc',
 		},
 	  });
-	  res.json(Notice);
+
+	  return res.status(200).json(notices);
 })
 
+router.get('/count', async (req, res) => {
+	try {
+	  const NoticeCount = await prisma.notices.count();
+	  
+	  return res.status(200).json({ NoticeCount });
+   
+	} catch (error) {
+	  console.error(error);
+	  return res.status(500).send('Error');
+	}
+}); // Notice Count
 
 router.post('/', async (req, res) => {
 	const { error } = schema.validate(req.body);

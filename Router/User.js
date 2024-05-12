@@ -142,6 +142,6 @@ router.get('/detail/:id', async (req, res, next) => {
 		console.error(error);
 		return next(error); 
 	  }
-})
+}) // 사용자 MyPage로 가져오기
 
 module.exports = router

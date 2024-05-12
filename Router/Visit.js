@@ -12,13 +12,34 @@ const schema = Joi.object({
 });
 
 router.get('/', async (req, res) => {
-	const Visit = await prisma.visit.findMany({
+	const visit = await prisma.visit.findMany({
 		orderBy: {
 		  createDate: 'desc',
 		},
 	  });
-	  res.json(Visit);
+
+	  const maskedVisit = visit.map(visits => {
+		const ip = visits.userIp;
+		const maskedIp = ip.substring(0, ip.lastIndexOf('.')+1) + 'XXX';
+		return {
+		  ...visits,
+		  userIp: maskedIp  
+		};
+	  });
+	  return res.status(200).json(maskedVisit);
 })
+
+router.get('/count', async (req, res) => {
+	try {
+	  const VisitCount = await prisma.visit.count();
+	  
+	  return res.status(200).json({ VisitCount });
+   
+	} catch (error) {
+	  console.error(error);
+	  return res.status(500).send('Error');
+	}
+}); // 총 글이 몇개인지 보여주는 API -> 예시 : X개의 방명록이 작성되었어요!
 
 router.post('/', async (req, res) => {
 	const { error } = schema.validate(req.body);
@@ -44,7 +65,6 @@ router.post('/', async (req, res) => {
 	}
 });
 
-
 router.delete('/remove/:id', async(req, res) => {
 	const { id } = req.params;
 	try {
@@ -61,5 +81,7 @@ router.delete('/remove/:id', async(req, res) => {
 		}
 	  }
 })
+
+
 
 module.exports = router

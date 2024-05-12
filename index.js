@@ -55,9 +55,15 @@ app.use(session({
 
 /* Router */
 const VisitRouter  = require('./Router/Visit')
+const UserRouter   = require('./Router/User')
+const NoticeRouter = require('./Router/Notice')
+const PostRouter   = require('./Router/Post')
 
-
+app.use('/notices', NoticeRouter)
+app.use('/post', PostRouter)
 app.use('/visit', VisitRouter)
+app.use('/user', UserRouter)
+app.use('/uploads', express.static('public/images/'));
 
 /* Router */
 

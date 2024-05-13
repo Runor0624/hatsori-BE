@@ -113,7 +113,7 @@ router.post('/login', (req, res, next) => {
 		  console.error(loginError);
 		  return next(loginError);
 		}
-		return res.status(200).send({ userId: user.userId, authority: user.authority });
+		return res.status(200).send({ userId: user.userId, authority: user.authority, nickname: user.nickname });
 	  });
 	})(req, res, next);
 });

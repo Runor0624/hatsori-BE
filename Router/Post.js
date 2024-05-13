@@ -12,7 +12,7 @@ const schema = Joi.object({
 	userId: Joi.number(),
 	title : Joi.string().min(1).max(20).required(),
 	description: Joi.string().trim().min(1).max(300).required(),
-	postimage : Joi.string()
+	postimage : Joi.optional() 
 });
 
 

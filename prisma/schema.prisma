@@ -27,7 +27,7 @@ model Users {
   nickname String @unique @db.VarChar(30)
   password   String // 비밀번호
   authority      String   @default("Normal") // 사용자 권한
-  userprofileimage String @db.VarChar(300)
+  userprofileimage String? @db.VarChar(300)
   createDate DateTime @default(now())
   notices Notices[] 
   posts Post[]
@@ -37,7 +37,7 @@ model Post {
   id         Int      @id @default(autoincrement())
   title     String   @db.VarChar(20)
   description String @db.VarChar(300)
-  postimage String @db.VarChar(300)
+  postimage String? @db.VarChar(300)
   createDate DateTime @default(now())
   userId   Int
   user     Users   @relation(fields: [userId], references: [id])

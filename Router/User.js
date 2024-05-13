@@ -16,7 +16,7 @@ const schema = Joi.object({
 	nickname: Joi.string().trim().min(1).max(30).required(),
 	password: Joi.string().trim().min(6).required(), // password 최소 6자 이상
 	authority: Joi.string().trim().min(1).required(),
-	userprofileimage : Joi.string()
+	userprofileimage : Joi.optional() 
 });
 
 /* 이미지 업로드 관련 */

@@ -38,6 +38,8 @@ model Post {
   title     String   @db.VarChar(20)
   description String @db.VarChar(300)
   postimage String? @db.VarChar(300)
+  likecount String? @db.VarChar(5)
+  dislikecount String? @db.VarChar(5)
   createDate DateTime @default(now())
   userId   Int
   user     Users   @relation(fields: [userId], references: [id])

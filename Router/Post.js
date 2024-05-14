@@ -12,7 +12,9 @@ const schema = Joi.object({
 	userId: Joi.number(),
 	title : Joi.string().min(1).max(20).required(),
 	description: Joi.string().trim().min(1).max(300).required(),
-	postimage : Joi.optional() 
+	postimage : Joi.optional(),
+	likecount: Joi.optional(),
+	dislikecount: Joi.optional()
 });
 
 
@@ -57,7 +59,7 @@ router.get('/', async (req, res) => {
 		},
 	  });
 	  res.json(Posts);
-})
+}) // 글 전체 조회
 
 router.get('/detail/:id', async (req, res) => {
 	const { id } = req.params;
@@ -70,7 +72,7 @@ router.get('/detail/:id', async (req, res) => {
     }
 
     return res.status(200).json(Posts);
-})
+}) // 특정 글 조회
 
 router.post('/add', upload.single('postimage'), async (req,res,next) => {
 	try {
@@ -93,7 +95,7 @@ router.post('/add', upload.single('postimage'), async (req,res,next) => {
 		console.error('에러: ', err);
 		res.status(500).send('서버 에러')
 	}
-})
+}) // 글 추가
 
 router.delete('/remove/:id', async(req, res) => {
 	const { id } = req.params;
@@ -110,5 +112,7 @@ router.delete('/remove/:id', async(req, res) => {
 		  res.status(500).json({ error: "Error" });
 		}
 	  }
-})
+}) // 글 삭제
+
+
 module.exports = router

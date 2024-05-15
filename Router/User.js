@@ -129,6 +129,7 @@ router.get('/detail/:id', async (req, res, next) => {
 				userId: true,
 				authority: true,
 				nickname: true,
+				userprofileimage: true,
 				createDate: true,
 			},
 		});

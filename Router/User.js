@@ -113,7 +113,7 @@ router.post('/login', (req, res, next) => {
 		  console.error(loginError);
 		  return next(loginError);
 		}
-		return res.status(200).send({ userId: user.userId, authority: user.authority, nickname: user.nickname });
+		return res.status(200).send({id: user.id, userId: user.userId, authority: user.authority, nickname: user.nickname });
 	  });
 	})(req, res, next);
 });
@@ -143,5 +143,32 @@ router.get('/detail/:id', async (req, res, next) => {
 		return next(error); 
 	  }
 }) // 사용자 MyPage로 가져오기
+
+router.delete('/remove/:id', async (req, res) => {
+	try {
+	  const { id } = req.params;
+  
+	  const user = await prisma.users.findUnique({ 
+		where: { id: Number(id) },
+	  });
+  
+	  if (!user) {
+		return res.status(404).send({ error: '없는 사용자입니다.' });
+	  }
+  
+	  await prisma.users.delete({
+		where: {
+		  id: Number(id),
+		},
+	  });
+  
+	  return res.status(200).send({ success: '회원 탈퇴에 성공했어요!' });
+	
+	} catch (error) {
+	  console.error(error);
+	  return res.status(500).send({ error: '서버 오류입니다. 잠시 후 다시 시도해주세요.' });
+	}
+}); // 회원탈퇴
+
 
 module.exports = router

@@ -61,6 +61,28 @@ router.get('/', async (req, res) => {
 	  res.json(Posts);
 }) // 글 전체 조회
 
+router.get('/hotpost', async (req,res) => {
+
+	const HotPosts = await prisma.post.findMany({
+		where: {
+			AND: [
+			  {
+				likecount: { gte: '5' }  
+			  },
+			  {
+				NOT: {
+				  dislikecount: { lte: '-10' }
+				}
+			  }
+			]
+		  },  
+	  orderBy: {
+		createDate: 'desc',
+	  },
+	});
+	res.json(HotPosts);
+})
+
 router.get('/detail/:id', async (req, res) => {
 	const { id } = req.params;
 	const Posts = await prisma.post.findUnique({
@@ -114,5 +136,64 @@ router.delete('/remove/:id', async(req, res) => {
 	  }
 }) // 글 삭제
 
+router.patch('/like/:id', async (req, res) => {
+	const { id } = req.params;
+  
+	try {
+		const post = await prisma.post.findUnique({
+			where: {
+			  id: Number(id)
+			}
+		  });
+		  	  
+		  const currentLikeCount = parseInt(post.likecount, 10) || 0;
+
+		  const updatedLikeCount = currentLikeCount + 1;
+		  
+		  const updated = await prisma.post.update({
+			where: { 
+			  id: Number(id)
+			},
+			data: {  
+			  likecount: String(updatedLikeCount)  
+			}
+		  });
+	  
+		  res.status(200).json(updated);
+	
+	} catch (error) {
+		console.error('에러: ', error);
+		res.status(500).send('서버 에러')
+	}  
+}) // 글 좋아요 API
+
+router.patch('/dislike/:id', async (req, res) => {
+	const { id } = req.params;
+  
+	try {
+		const post = await prisma.post.findUnique({
+			where: { id: Number(id) }  
+		  });
+		  
+		  const currentDislikeCount = parseInt(post.dislikecount, 10) || 0;
+		  
+		  const updatedDislikeCount = currentDislikeCount - 1;
+		  
+		  const updated = await prisma.post.update({
+			where: { 
+			  id: Number(id)
+			},
+			data: {
+				dislikecount: String(updatedDislikeCount)  
+			}
+		  });
+	  
+		  res.status(200).json(updated);
+	
+	} catch (error) {
+		console.error('에러: ', error);
+		res.status(500).send('서버 에러')
+	}  
+}) // 글 싫어요 API
 
 module.exports = router

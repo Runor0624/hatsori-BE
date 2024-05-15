@@ -57,12 +57,15 @@ async function compressImage(imagePath) {
 router.post('/signup', upload.single('userprofileimage'), async (req,res,next) => {
 
 	try {
-		let imageFile = null
+		let uploadedImage = null;
+
 		if(req.file) {
-		  const compressedImage = await compressImage(req.file.path)  
-		  imageFile = compressedImage 
+		uploadedImage = await compressImage(req.file.path); 
 		}
-		
+
+		if (!uploadedImage) {
+		uploadedImage = null; 
+		}
 		  const value = await schema.validateAsync(req.body);
     
 		  const hashedPassword = await bcrypt.hash(value.password, 10);
@@ -88,7 +91,7 @@ router.post('/signup', upload.single('userprofileimage'), async (req,res,next) =
 			data: {
 			  ...value,
 			  password: hashedPassword,
-			  userprofileimage: imageFile
+			  userprofileimage: uploadedImage
 			}
 		  });
 		  
